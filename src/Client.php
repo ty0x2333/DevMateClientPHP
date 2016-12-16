@@ -44,14 +44,34 @@ class Client
         if (!empty($query_string)) {
             $url = $url . '?' . $query_string;
         }
+        
+        list($httpStatus, $response) = $this->_request($url);
+
+        $response_object = json_decode($response, true);
+        $customer_objects = $response_object["data"];
+        
+        $customers = array();
+        foreach ($customer_objects as $object) {
+            $customers[] = new CustomerModel($object);
+        }
+        
+        return array($httpStatus, $customers);
+    }
+    
+    private function _request($url, $data = "", $method = "GET")
+    {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->getAuthHeader());
-        
+
         $response = curl_exec($ch);
         $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        
+        if ($method == "POST") {
+            // TODO
+        }
 
         // Get Request and Response Headers
 //        $requestHeaders = curl_getinfo($ch, CURLINFO_HEADER_OUT);
@@ -68,15 +88,7 @@ class Client
 
         curl_close($ch);
 
-        $response_object = json_decode($response, true);
-        $customer_objects = $response_object["data"];
-        
-        $customers = array();
-        foreach ($customer_objects as $object) {
-            $customers[] = new CustomerModel($object);
-        }
-        
-        return array($httpStatus, $customers);
+        return array($httpStatus, $response);
     }
 
 }
