@@ -22,7 +22,8 @@ class Client
     {
         if (!empty($this->api_key)) {
             return array(
-                'Authorization: Token ' . $this->api_key
+                "Authorization: Token " . $this->api_key,
+                "Content-Type: application/json"
             );
         }
     }
@@ -58,21 +59,46 @@ class Client
         return array($httpStatus, $customers);
     }
     
+    public function create_license($custom_id, $license_type_id)
+    {
+        $data = array(
+            "data" => array(
+                "license_type_id" => $license_type_id
+            )
+        );
+        
+        $url = rtrim(trim(DevMateConstants::BASE_URL), '/') . "/v2/customers/" . $custom_id . "/licenses";
+
+        list($httpStatus, $response) = $this->_request($url, json_encode($data), "POST");
+
+        $response_object = json_decode($response, true);
+        $license_object = $response_object["data"];
+        $license = new LicenseModel($license_object);
+        
+        return array($httpStatus, $license);
+    }
+    
     private function _request($url, $data = "", $method = "GET")
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $header = $this->getAuthHeader();
+        $header[] = 'Content-Length: ' . strlen($data);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->getAuthHeader());
-
+        if ($method == "POST") {
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        }
+        if (!empty($method)) {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+        }
+        
         $response = curl_exec($ch);
         $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         
-        if ($method == "POST") {
-            // TODO
-        }
-
         // Get Request and Response Headers
 //        $requestHeaders = curl_getinfo($ch, CURLINFO_HEADER_OUT);
         // Using alternative solution to CURLINFO_HEADER_SIZE as it throws invalid number when called using PROXY.
@@ -84,6 +110,10 @@ class Client
             $responseHeaderSize = strlen($response) - curl_getinfo($ch, CURLINFO_SIZE_DOWNLOAD);
 //            $responseHeaders = substr($response, 0, $responseHeaderSize);
             $response = substr($response, $responseHeaderSize);
+        }
+
+        if (curl_errno($ch)) {
+            // TODO
         }
 
         curl_close($ch);
