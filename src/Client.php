@@ -54,20 +54,29 @@ class Client
         $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         // Get Request and Response Headers
-        $requestHeaders = curl_getinfo($ch, CURLINFO_HEADER_OUT);
+//        $requestHeaders = curl_getinfo($ch, CURLINFO_HEADER_OUT);
         // Using alternative solution to CURLINFO_HEADER_SIZE as it throws invalid number when called using PROXY.
         if (function_exists('mb_strlen')) {
             $responseHeaderSize = mb_strlen($response, '8bit') - curl_getinfo($ch, CURLINFO_SIZE_DOWNLOAD);
-            $responseHeaders = mb_substr($response, 0, $responseHeaderSize, '8bit');
+//            $responseHeaders = mb_substr($response, 0, $responseHeaderSize, '8bit');
             $response = mb_substr($response, $responseHeaderSize, mb_strlen($response), '8bit');
         } else {
             $responseHeaderSize = strlen($response) - curl_getinfo($ch, CURLINFO_SIZE_DOWNLOAD);
-            $responseHeaders = substr($response, 0, $responseHeaderSize);
+//            $responseHeaders = substr($response, 0, $responseHeaderSize);
             $response = substr($response, $responseHeaderSize);
         }
 
         curl_close($ch);
-        return array($httpStatus, $response);
+
+        $response_object = json_decode($response, true);
+        $customer_objects = $response_object["data"];
+        
+        $customers = array();
+        foreach ($customer_objects as $object) {
+            $customers[] = new CustomerModel($object);
+        }
+        
+        return array($httpStatus, $customers);
     }
 
 }
