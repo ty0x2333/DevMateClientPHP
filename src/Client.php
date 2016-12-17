@@ -59,6 +59,40 @@ class Client
         return array($httpStatus, $customers);
     }
     
+    public function create_customer($email, $first_name = "", $last_name = "", $company = "", 
+                                    $phone = "", $address = "", $note = "")
+    {
+        $data = array(
+            'data' => array(
+                'email' => $email,
+                'first_name' => $first_name,
+                'last_name' => $last_name,
+                'company' => $company,
+                'phone' => $phone,
+                'address' => $address,
+                'note' => $note
+            )
+        );
+
+        $url = rtrim(trim(DevMateConstants::BASE_URL), '/') . "/v2/customers";
+        list($httpStatus, $response) = $this->_request($url, json_encode($data), "POST");
+
+        $response_object = json_decode($response, true);
+
+        if ($httpStatus == 409) {
+            $error_objects = $response_object["errors"][0];
+            $title = $error_objects["title"];
+            $detail = $error_objects["detail"];
+            $ex = new \Exception($title . $detail, $httpStatus);
+            throw $ex;
+        }
+        
+        $customer_object = $response_object["data"];
+        $customer = new CustomerModel($customer_object);
+        
+        return array($httpStatus, $customer);
+    }
+    
     public function create_license($custom_id, $license_type_id)
     {
         $data = array(
