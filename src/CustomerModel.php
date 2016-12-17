@@ -20,7 +20,7 @@ class CustomerModel
     public $address;
     public $note;
     public $date_added;
-//    public $licenses;
+    public $licenses;
     
     public function __construct($json)
     {
@@ -33,5 +33,13 @@ class CustomerModel
         $this->address = $json["address"];
         $this->note = $json["note"];
         $this->date_added = $json["date_added"];
+        $this->licenses = array();
+        if (isset($json["licenses"])) {
+            $license_objects = $json["licenses"];
+            foreach ($license_objects as $obj) {
+                $license = new LicenseModel($obj);
+                $this->licenses[] = $license;
+            }
+        }
     }
 }
