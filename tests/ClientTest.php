@@ -17,17 +17,18 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     const API_KEY = "1e8b252e67adeecc9b94fe139ca80240294ab56209c6d89d1f7437c28dc37713";
     
     private $email;
+    private $client;
     
     public function __construct($name = null, array $data = array(), $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
         $this->email = time() . "@gmail.com";
+        $this->client = new Client(ClientTest::API_KEY);
     }
 
     public function testCreateCustomer()
     {
-        $client = new Client(ClientTest::API_KEY);
-        list($status, $customer) = $client->create_customer($this->email);
+        list($status, $customer) = $this->client->create_customer($this->email);
         $this->assertEquals(201, $status);
         $this->assertEquals($customer->email, $this->email);
         $this->assertEquals(0, count($customer->licenses));
@@ -41,8 +42,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testDuplicateCreateCustomer(CustomerModel $customer)
     {
         $this->setExpectedException(\Exception::class, '', 409);
-        $client = new Client(ClientTest::API_KEY);
-        $client->create_customer($customer->email);
+        $this->client->create_customer($customer->email);
     }
 
     /**
@@ -50,8 +50,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testFetchCustomers()
     {
-        $client = new Client(ClientTest::API_KEY);
-        list($status, $customers) = $client->fetch_customers();
+        list($status, $customers) = $this->client->fetch_customers();
         $this->assertEquals(200, $status);
         $this->assertGreaterThan(0, count($customers));
     }
@@ -62,8 +61,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testFetchSpecificCustomer(CustomerModel $customer)
     {
-        $client = new Client(ClientTest::API_KEY);
-        list($status, $fetched_customer) = $client->fetch_customer($customer->custom_id);
+        list($status, $fetched_customer) = $this->client->fetch_customer($customer->custom_id);
         $this->assertEquals(200, $status);
         $this->assertEquals($customer->custom_id, $fetched_customer->custom_id);
     }
@@ -74,9 +72,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateLicense(CustomerModel $customer)
     {
-        $client = new Client(ClientTest::API_KEY);
         $license_type_id = 1;
-        list($status, $license) = $client->create_license($customer->custom_id, $license_type_id);
+        list($status, $license) = $this->client->create_license($customer->custom_id, $license_type_id);
         $this->assertEquals(201, $status);
         $this->assertNotNull($license);
     }
