@@ -15,6 +15,14 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 {
     const API_KEY = "1e8b252e67adeecc9b94fe139ca80240294ab56209c6d89d1f7437c28dc37713";
     
+    private $email;
+    
+    public function __construct($name = null, array $data = array(), $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+        $this->email = time() . "@gmail.com";
+    }
+
     public function testFetchCustomers()
     {
         $client = new Client(ClientTest::API_KEY);
@@ -32,5 +40,14 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         // maybe 200 or 201
         $this->assertGreaterThanOrEqual(200, $status);
         $this->assertNotNull($license);
+    }
+    
+    public function testCreateCustomer()
+    {
+        $client = new Client(ClientTest::API_KEY);
+        list($status, $customer) = $client->create_customer($this->email);
+        $this->assertEquals(201, $status);
+        $this->assertEquals($customer->email, $this->email);
+        return $customer;
     }
 }
