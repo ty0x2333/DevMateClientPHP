@@ -9,6 +9,7 @@
 namespace Tests\Ty\DevMate;
 
 use Ty\DevMate\Client;
+use Ty\DevMate\CustomerModel;
 
 
 class ClientTest extends \PHPUnit_Framework_TestCase
@@ -33,13 +34,14 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param CustomerModel $customer created customer
      * @depends testCreateCustomer
      */
-    public function testDuplicateCreateCustomer()
+    public function testDuplicateCreateCustomer(CustomerModel $customer)
     {
         $this->setExpectedException(\Exception::class, '', 409);
         $client = new Client(ClientTest::API_KEY);
-        $client->create_customer($this->email);
+        $client->create_customer($customer->email);
     }
 
     /**
