@@ -67,15 +67,17 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $status);
         $this->assertEquals($customer->custom_id, $fetched_customer->custom_id);
     }
-    
-    public function testCreateLicense()
+
+    /**
+     * @param CustomerModel $customer created customer
+     * @depends testCreateCustomer
+     */
+    public function testCreateLicense(CustomerModel $customer)
     {
         $client = new Client(ClientTest::API_KEY);
-        $customer_id = 2;
         $license_type_id = 1;
-        list($status, $license) = $client->create_license($customer_id, $license_type_id);
-        // maybe 200 or 201
-        $this->assertGreaterThanOrEqual(200, $status);
+        list($status, $license) = $client->create_license($customer->custom_id, $license_type_id);
+        $this->assertEquals(201, $status);
         $this->assertNotNull($license);
     }
 }
