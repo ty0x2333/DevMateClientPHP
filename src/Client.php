@@ -58,6 +58,19 @@ class Client
         
         return array($httpStatus, $customers);
     }
+
+    public function fetch_customer($customer_id)
+    {
+        $url = rtrim(trim(DevMateConstants::BASE_URL), '/') . "/v2/customers/" . $customer_id;
+
+        list($httpStatus, $response) = $this->_request($url);
+
+        $response_object = json_decode($response, true);
+        $customer_object = $response_object["data"];
+        $customer = new CustomerModel($customer_object);
+
+        return array($httpStatus, $customer);
+    }
     
     public function create_customer($email, $first_name = "", $last_name = "", $company = "", 
                                     $phone = "", $address = "", $note = "")
