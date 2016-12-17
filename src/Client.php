@@ -132,8 +132,6 @@ class Client
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $header = $this->getAuthHeader();
-        $header[] = 'Content-Length: ' . strlen($data);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->getAuthHeader());
         if ($method == "POST") {
             curl_setopt($ch, CURLOPT_POST, true);
