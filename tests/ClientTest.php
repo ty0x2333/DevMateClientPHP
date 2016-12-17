@@ -50,4 +50,14 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($customer->email, $this->email);
         return $customer;
     }
+
+    /**
+     * @depends testCreateCustomer
+     */
+    public function testDuplicateCreateCustomer()
+    {
+        $this->setExpectedException(\Exception::class, '', 409);
+        $client = new Client(ClientTest::API_KEY);
+        $client->create_customer($this->email);
+    }
 }
