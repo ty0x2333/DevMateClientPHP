@@ -41,7 +41,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testDuplicateCreateCustomer(CustomerModel $customer)
     {
-        $this->setExpectedException(\Exception::class, '', 409);
+        $this->setExpectedException('Exception', '', 409);
         $this->client->create_customer($customer->email);
     }
 
