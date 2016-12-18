@@ -7,3 +7,4 @@
 |_____/ \___| \_/ |_|  |_|\__,_|\__\___|\_____|_|_|\___|_| |_|\__|_|    |_|  |_|_|     
 ```
 [![Build Status](https://travis-ci.org/luckytianyiyan/DevMateClientPHP.svg?branch=master)](https://travis-ci.org/luckytianyiyan/DevMateClientPHP)
+[![Coverage Status](https://coveralls.io/repos/github/luckytianyiyan/DevMateClientPHP/badge.svg?branch=feature%2Fcoveralls)](https://coveralls.io/github/luckytianyiyan/DevMateClientPHP?branch=feature%2Fcoveralls)
