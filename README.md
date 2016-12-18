@@ -6,4 +6,4 @@
 | |__| |  __/\ V /| |  | | (_| | ||  __/ |____| | |  __/ | | | |_| |    | |  | | |     
 |_____/ \___| \_/ |_|  |_|\__,_|\__\___|\_____|_|_|\___|_| |_|\__|_|    |_|  |_|_|     
 ```
-[![Build Status](https://travis-ci.com/luckytianyiyan/DevMateClientPHP.svg?token=KxwDz7Dpc3VEyK4zS63h&branch=master)](https://travis-ci.com/luckytianyiyan/DevMateClientPHP)
+[![Build Status](https://travis-ci.org/luckytianyiyan/DevMateClientPHP.svg?branch=master)](https://travis-ci.org/luckytianyiyan/DevMateClientPHP)
