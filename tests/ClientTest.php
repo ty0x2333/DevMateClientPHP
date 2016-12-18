@@ -9,6 +9,7 @@
 namespace Tests\Ty\DevMate;
 
 use Ty\DevMate\Client;
+use Ty\DevMate\CustomerFiltration;
 use Ty\DevMate\CustomerModel;
 
 
@@ -44,7 +45,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('Exception', '', 409);
         $this->client->create_customer($customer->email);
     }
-
+    
     /**
      * @depends testCreateCustomer
      */
@@ -64,6 +65,20 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         list($status, $fetched_customer) = $this->client->fetch_customer($customer->custom_id);
         $this->assertEquals(200, $status);
         $this->assertEquals($customer->custom_id, $fetched_customer->custom_id);
+    }
+
+    /**
+     * @param CustomerModel $customer created customer
+     * @depends testCreateCustomer
+     */
+    public function testFetchCustomersByFiltration(CustomerModel $customer)
+    {
+        $filtration = new CustomerFiltration();
+        $filtration->email = $customer->email;
+        list($status, $customers) = $this->client->fetch_customers($filtration);
+        $this->assertEquals(200, $status);
+        $this->assertEquals(1, count($customers));
+        $this->assertEquals($customer->custom_id, $customers[0]->custom_id);
     }
 
     /**
