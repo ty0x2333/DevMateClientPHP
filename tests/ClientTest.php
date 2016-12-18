@@ -11,6 +11,7 @@ namespace Tests\Ty\DevMate;
 use Ty\DevMate\Client;
 use Ty\DevMate\CustomerFiltration;
 use Ty\DevMate\CustomerModel;
+use Ty\DevMate\LicenseModel;
 
 
 class ClientTest extends \PHPUnit_Framework_TestCase
@@ -45,6 +46,19 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('Exception', '', 409);
         $this->client->create_customer($customer->email);
     }
+
+    /**
+     * @param CustomerModel $customer created customer
+     * @depends testCreateCustomer
+     */
+    public function testCreateLicense(CustomerModel $customer)
+    {
+        $license_type_id = 1;
+        list($status, $license) = $this->client->create_license($customer->custom_id, $license_type_id);
+        $this->assertEquals(201, $status);
+        $this->assertNotNull($license);
+        return $license;
+    }
     
     /**
      * @depends testCreateCustomer
@@ -58,13 +72,18 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param CustomerModel $customer created customer
+     * @param LicenseModel $license created license
      * @depends testCreateCustomer
+     * @depends testCreateLicense
      */
-    public function testFetchSpecificCustomer(CustomerModel $customer)
+    public function testFetchSpecificCustomer(CustomerModel $customer, LicenseModel $license)
     {
         list($status, $fetched_customer) = $this->client->fetch_customer($customer->custom_id);
         $this->assertEquals(200, $status);
         $this->assertEquals($customer->custom_id, $fetched_customer->custom_id);
+        $this->assertEquals(1, count($fetched_customer->licenses));
+        $fetched_license = $fetched_customer->licenses[0];
+        $this->assertEquals($license->license_id, $fetched_license->license_id);
     }
 
     /**
@@ -79,17 +98,5 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $status);
         $this->assertEquals(1, count($customers));
         $this->assertEquals($customer->custom_id, $customers[0]->custom_id);
-    }
-
-    /**
-     * @param CustomerModel $customer created customer
-     * @depends testCreateCustomer
-     */
-    public function testCreateLicense(CustomerModel $customer)
-    {
-        $license_type_id = 1;
-        list($status, $license) = $this->client->create_license($customer->custom_id, $license_type_id);
-        $this->assertEquals(201, $status);
-        $this->assertNotNull($license);
     }
 }
