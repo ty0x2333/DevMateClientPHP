@@ -8,3 +8,18 @@
 ```
 [![Build Status](https://travis-ci.org/luckytianyiyan/DevMateClientPHP.svg?branch=master)](https://travis-ci.org/luckytianyiyan/DevMateClientPHP)
 [![Coverage Status](https://coveralls.io/repos/github/luckytianyiyan/DevMateClientPHP/badge.svg?branch=feature%2Fcoveralls)](https://coveralls.io/github/luckytianyiyan/DevMateClientPHP?branch=feature%2Fcoveralls)
+
+Prerequisites
+---
+- PHP 5.3+
+
+Install
+---
+To install DevMateClient with [Composer](https://getcomposer.org/), run the following command:
+```
+$ composer require luckytianyiyan/devmate-client
+```
+
+LICENSE
+---
+DevMateClient is available under the MIT license. See the [LICENSE](LICENSE) file for more info.
