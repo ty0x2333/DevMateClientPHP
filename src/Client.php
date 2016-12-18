@@ -18,16 +18,6 @@ class Client
         $this->api_key = $api_key;
     }
     
-    public function getAuthHeader()
-    {
-        if (!empty($this->api_key)) {
-            return array(
-                "Authorization: Token " . $this->api_key,
-                "Content-Type: application/json"
-            );
-        }
-    }
-
     public function fetch_customers(CustomerFiltration $filtration = NULL, $limit = NULL, $offset = NULL, $licenses = NULL)
     {
         $data = array(
@@ -164,6 +154,16 @@ class Client
         curl_close($ch);
 
         return array($httpStatus, $response);
+    }
+
+    private function getAuthHeader()
+    {
+        if (!empty($this->api_key)) {
+            return array(
+                "Authorization: Token " . $this->api_key,
+                "Content-Type: application/json"
+            );
+        }
     }
 
 }
