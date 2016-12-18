@@ -7,7 +7,9 @@ php:
   - 5.6
   - 7.0
 before_script:
-  - composer self-update
+  - mkdir build
+  - mkdir build/coverage
+#  - composer self-update
   - composer install --dev
 after_success:
   - travis_retry php vendor/bin/coveralls -v
