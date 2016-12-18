@@ -8,6 +8,9 @@
 ```
 [![Build Status](https://travis-ci.org/luckytianyiyan/DevMateClientPHP.svg?branch=master)](https://travis-ci.org/luckytianyiyan/DevMateClientPHP)
 [![Coverage Status](https://coveralls.io/repos/github/luckytianyiyan/DevMateClientPHP/badge.svg?branch=feature%2Fcoveralls)](https://coveralls.io/github/luckytianyiyan/DevMateClientPHP?branch=feature%2Fcoveralls)
+[![Packagist](https://img.shields.io/packagist/v/luckytianyiyan/devmate-client.svg)](https://packagist.org/packages/luckytianyiyan/devmate-client)
+
+This is a simple [DevMate](http://devmate.com/) [Public API](https://docs.devmate.com/docs/api) client written in PHP.
 
 Prerequisites
 ---
